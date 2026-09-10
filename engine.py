@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import tensorflow as tf
+try:
+    import tensorflow as tf
+except ImportError:
+    tf = None
 import joblib
 import numpy as np
 import uvicorn
@@ -33,6 +36,8 @@ app.add_middleware(
 # ==========================================
 try:
     # `compile=False` avoids deserializing training-only objects from legacy H5 files.
+    if tf is None:
+        raise RuntimeError("TensorFlow is unavailable; using fallback models.")
     lstm_model = tf.keras.models.load_model('models/lstm_model.h5', compile=False)
     xgb_model = joblib.load('models/xgboost_model.pkl')
     xgb_feature_count = int(getattr(xgb_model, "n_features_in_", 10))
