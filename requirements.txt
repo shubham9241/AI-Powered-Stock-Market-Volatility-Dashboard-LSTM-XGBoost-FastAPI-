@@ -6,7 +6,6 @@ pandas
 plotly
 joblib
 numpy
-tensorflow
 xgboost
 scikit-learn
 h5py
